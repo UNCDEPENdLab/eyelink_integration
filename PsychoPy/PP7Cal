@@ -1,0 +1,13 @@
+
+
+# ###########Options for custom calibaration settings. not neccessary but can be useful, see programmer's guide for details#########
+setCalibrationColors((0, 0, 0), (192, 192, 192));   #Sets the calibration target and background color
+setCalibrationSounds("", "", ""); #calls the beeps
+setDriftCorrectSounds("", "off", "off"); # we aren't doing drift correct
+el.sendCommand("calibration_type = HV9") # el.setCalibrationType('HV9') also supposedly works, see the Pylink manual
+#setTargetSize(int(screen_width/70), int(screen_width/300)); #select best size for calibration target, commented out bc we went with default
+#setTargetSize(27, 6); #select best size for calibration target, commented out bc we went with default
+
+#good to make sure the tracker is connected before setup!
+if(el.isConnected() and not el.breakPressed()):
+    el.doTrackerSetup()

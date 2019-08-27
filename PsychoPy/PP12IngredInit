@@ -1,0 +1,28 @@
+#This Code  loads ingredients for Eyelink integration to Psychopy. Steps are called together in el_setup at the top of the experiment code. 
+
+#STEP 1: Ingredients neccessary
+#pylink is the eyelink package for psychopy
+from pylink import *
+#pygame is explicitly used to take screenshots and write them to data viewer
+from pygame import *
+import time
+import gc #unclear whether we need this for this specific experiment but leaving in just in case
+import sys
+import os
+#This is the eyelink core graphics library and contains the calibration rolutine
+from EyeLinkCoreGraphicsPsychoPy import EyeLinkCoreGraphicsPsychoPy
+
+
+#Here we will set up some variables that will help us out later.
+#This guy is helpful for setting up function loops, so the experiment can run with or without eye tracking
+eyetracking=True
+#these are set up for getting gaze position data in a loop that checks for eye data samples later
+RIGHT_EYE = 1
+LEFT_EYE = 0
+BINOCULAR = 2
+#these are used in setting up display coordinates and calculating screen size for a variety of functions
+screen_width=win.size[0]
+screen_height=win.size[1]
+
+#STEP 2: Intiialize connection to tracker
+el = EyeLink('100.1.1.1')

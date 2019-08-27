@@ -1,0 +1,36 @@
+#STEP 3:Open edf file and give it a string name <8 characters
+
+#Open Edf File ASAP to make sure we don't miss anything
+#Make sure you set the expinfo information you want in experiment settings before trying to call on them.
+edfFileName = "X_%s_%s.edf" %(expInfo['participant'],expInfo['participant initials'])
+el.openDataFile(edfFileName)  
+
+#STEP 4" Set Offline Mode and strt tracker configuration
+
+# This is not step 4, more like a Step 1 for Step 7: Maybe has to happen after initializing connection?
+#call the custom calibration routine "EyeLinkCoreGraphicsPsychopy.py"
+genv = EyeLinkCoreGraphicsPsychoPy(el, win)
+openGraphicsEx(genv)
+
+# the flush just clears all keypresses
+flushGetkeyQueue()
+#set offline mode
+el.setOfflineMode()
+
+
+#STEP 4 continued: get tracker version and set parser configuration.
+tracker_software_ver = 0
+eyelink_ver = el.getTrackerVersion()
+if eyelink_ver == 3:
+    tvstr = el.getTrackerVersionString()
+    vindex = tvstr.find("EYELINK CL")
+    tracker_software_ver = int(float(tvstr[(vindex + len("EYELINK CL")):].strip()))
+ 
+
+if eyelink_ver>=2:
+    el.sendCommand("select_parser_configuration 0")
+    if eyelink_ver == 2: #turn off scenelink camera stuff
+        el.sendCommand("scene_camera_gazemap = NO")
+else:
+    el.sendCommand("saccade_velocity_threshold = 35")
+    el.sendCommand("saccade_acceleration_threshold = 9500")

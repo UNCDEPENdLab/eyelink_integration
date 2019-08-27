@@ -1,0 +1,7 @@
+el.setOfflineMode()
+el.closeDataFile()
+pumpDelay(50)
+
+el.closeDataFile()
+el.receiveDataFile(edfFileName, edfFileName)
+el.close();

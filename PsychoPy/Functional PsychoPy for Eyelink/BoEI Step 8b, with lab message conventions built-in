@@ -1,0 +1,35 @@
+def Display_On (stim): #Alerts that stim has started
+    # this message marks the onset of the stimulus
+    el.sendMessage("DISPLAY_ON'%s'" %(stim))
+    el.sendCommand("'record_status_message Task: %s'" %(stim))
+
+def Shield_Up (custom): #Custom Display_On
+    el.sendMessage("DISPLAY_ON'%s'" %(custom))
+    el.sendCommand("'record_status_message Task: %s'" %(custom))
+
+def get_gaze(): # check for new samples (this is why we set up the eyes in step 1!)
+    eye_used = el.eyeAvailable()
+    dt = el.getNewestSample()
+    if (dt != None):
+        if eye_used == RIGHT_EYE and dt.isRightSample():
+            gazePos = dt.getRightEye().getGaze()
+        elif eye_used != RIGHT_EYE and dt.isLeftSample():
+            gazePos = dt.getLeftEye().getGaze()
+
+def GetScreen(stim): #Take screenshot of screen for drawing to Data Viewer and draw interest areas
+    if not os.path.exists('displayfolder'): os.mkdir('displayfolder')
+    screenshot = 'displayfolder/'+'%s' %(stim)
+    win.getMovieFrame()
+    win.saveMovieFrames(screenshot)
+    win.flip()
+    el.sendMessage('!V TRIAL_VAR task %s')    # send interest area messages, if there is any, here we set a rectangular IA, just to
+    # illustrate how the IA messages look like 
+    # format: !V IAREA RECTANGLE <id> <left> <top> <right> <bottom> [label string] 
+    # [see Data Viewer User Manual, Section 7: Protocol for EyeLink Data to Viewer Integration]
+    el.sendMessage('!V IAREA RECTANGLE %d %d %d %d %d %s'%(1, screen_width-1200, screen_height/2-275, screen_width/2+250, screen_height/2+275, 'screenIA'))
+    el.sendMessage("'!V IMGLOAD FILL %s'" %(screenshot))
+    
+def Display_Off(stim):
+    # this message marks the onset of the stimulus
+    el.sendMessage("DISPLAY_OFF'%s'" %(stim))
+    el.sendCommand("'record_status_message Task: %s'" %(stim))

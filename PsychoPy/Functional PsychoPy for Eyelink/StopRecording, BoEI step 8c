@@ -1,0 +1,6 @@
+
+def StopRecording(stim):
+    #BoEI Step 8c: Stop recording before starting new loop. This should go at the end of your last endroutine for the trial!
+    el.sendMessage("TRIALOK")
+    pumpDelay(100)
+    el.stopRecording() # stop recording

@@ -1,0 +1,12 @@
+#Pretty self-explanatory, We're just closing up our data file to get ready for transfer
+el.setOfflineMode()
+el.closeDataFile()
+pumpDelay(50)
+
+#Here's the transfer:
+el.closeDataFile()
+el.receiveDataFile(edfFileName, edfFileName)
+el.receiveDataFile(edfFileName, edfFileName)
+
+BoEI Step 10: Say goodbye and close the tracker connection
+el.close();

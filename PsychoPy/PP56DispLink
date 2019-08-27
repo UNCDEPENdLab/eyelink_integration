@@ -1,0 +1,22 @@
+#BoEI STEP 5: Get Display surface adn Draw to Data Viewer
+#Gets the display surface and sends a mesage to EDF file;
+#see here we call screen width and height!
+el.sendCommand("screen_pixel_coords =  0 0 %d %d" %(screen_width - 1, screen_height - 1))
+el.sendMessage("DISPLAY_COORDS  0 0 %d %d" %(screen_width - 1, screen_height - 1))
+
+# BoEI STEP 6: Set EDF file contents. SR research has a really good index of terms and functions (linked in our guide)
+#if you are curious about how these work. 
+el.sendCommand("file_event_filter = LEFT,RIGHT,FIXATION,SACCADE,BLINK,MESSAGE,BUTTON,INPUT")
+if tracker_software_ver>=4:
+    el.sendCommand("file_sample_data  = LEFT,RIGHT,GAZE,AREA,GAZERES,STATUS,HTARGET,INPUT")
+else:
+    el.sendCommand("file_sample_data  = LEFT,RIGHT,GAZE,AREA,GAZERES,STATUS,INPUT")
+
+# set link data (used for gaze cursor) 
+el.sendCommand("link_event_filter = LEFT,RIGHT,FIXATION,SACCADE,BLINK,BUTTON,INPUT")
+if tracker_software_ver>=4:
+    el.sendCommand("link_sample_data  = LEFT,RIGHT,GAZE,GAZERES,AREA,STATUS,HTARGET,INPUT")
+else:
+    el.sendCommand("link_sample_data  = LEFT,RIGHT,GAZE,GAZERES,AREA,STATUS,INPUT")
+
+el.sendCommand("button_function 5 'accept_target_fixation'");

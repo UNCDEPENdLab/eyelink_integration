@@ -1,0 +1,36 @@
+# Place this in the "end routine" section of the code object in builder view for psychopy
+# IF YOUR TRIAL IS A LOOP (i.e., more than one stimulus is presented), the "startrecording" should go in the 'start routine if the first 
+#BoEI Step 8b: Capture screenshot and send to data viewer using messages. 
+
+# this comes from the pygame library. Can be tricky to have the computer find the images.
+
+if not os.path.exists('screenshotFolder'): os.mkdir('screenshotFolder')
+screenshot = 'screenshotFolder'+'cond_%s' %(eldraw)
+win.getMovieFrame()
+win.saveMovieFrames(screenshot)
+win.flip()
+
+el.sendMessage('image_offset')
+
+# Message to specify where the image is stored relative to the EDF data file so Data Viewer and analyses can find it
+el.sendMessage('!V IMGLOAD FILL %s' % (screenshot))
+# send trial variables for Data Viewer integration
+#[see Data Viewer User Manual, Section 7: Protocol for EyeLink Data to Viewer Integration]
+el.sendMessage('!V TRIAL_VAR task %s')    # send interest area messages, if there is any, here we set a rectangular IA, just to
+# illustrate how the IA messages look like 
+# format: !V IAREA RECTANGLE <id> <left> <top> <right> <bottom> [label string] 
+# [see Data Viewer User Manual, Section 7: Protocol for EyeLink Data to Viewer Integration]
+el.sendMessage('!V IAREA RECTANGLE %d %d %d %d %d %s'%(1, screen_width-1200, screen_height/2-275, screen_width/2+250, screen_height/2+275, 'screenIA'))
+
+# send the standard "TRIALID" message to mark the start of a trial
+# [see Data Viewer User Manual, Section 7: Protocol for EyeLink Data to Viewer Integration]
+el.sendMessage("TRIALID")
+
+######IMPORTANT: If you have more than one screenshot to be made per trial 
+#####(ex: an image followed by a feedback slide feedback slide) repeat all of 8b in the 
+#####"start routine" and "end routine" sections on each code object in psychopy
+
+#BoEI Step 8c: Stop recording before starting new loop. This should go at the end of your last endroutine for the trial!
+el.sendMessage('TRIAL_RESULT')
+pumpDelay(100)
+el.stopRecording() # stop recording

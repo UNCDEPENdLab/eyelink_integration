@@ -1,0 +1,16 @@
+##PURPOSE: Insert functions neccessary for Eyelink integration and perform EyeLink Setup
+##LOCATION: "begin routine" tab of any element that will dispaly a screen to be eyetracked
+
+def StartRecording (stim, block, trial, custom):
+    #BOEI STEP 8a: start recording, parameters specify whether events and samples are
+    # send the standard "TRIALID" message to mark the start of a trial
+    # [see Data Viewer User Manual, Section 7: Protocol for EyeLink Data to Viewer Integration]
+    el.sendMessage('TRIALID_%s_%s_%d_%s' % (stim, block, trial, custom))
+    #el.sendMessage('TRIALID_%s_%d_%d_%s' % ('jello', 1, 1, 'green'))
+    # record_status_message : show some info on the host PC. This tells the experimenter the trial has started.
+    #set the string to whatever you want to identify the task.
+    # stored in file, and available over the link. Each 1 corresponds to link_sample_data,, file_link_events, etc... We set this up in step 6!
+    el.startRecording(1,1,1,1)
+    el.sendCommand("'record_status_message Task: %s'" %(block))
+    pumpDelay(100) # wait for 100 ms to make sure data of interest is recorded
+    el.sendMessage("SYNCTIME")
