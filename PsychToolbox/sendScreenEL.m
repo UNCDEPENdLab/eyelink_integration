@@ -1,5 +1,19 @@
 function sendScreenEL(stim, block, trial, approach, el, wd, width, height, stimondelay, aois, aoi_labs, clear_stim, end_trial)
- id_str=sprintf('%s_%s_%d_%s', stim, block, trial, approach) 
+% This function sends information about stimuli being currently presented
+% to an .edf file. Also sets up area of interest info for static areas of interest.
+% 
+% There are no outputs per se in this function as this function simply executes a series of commands that embeds task-relevant info into a .edf file.
+%
+% inputs:
+%   - screen_export: a 6-element cell array, structured such that
+%             {1}: PTB window 
+%             {2}: a string to identify what is on the screen
+%             {3}: width of the screen
+%             {4}: height of the screen
+%             {5}: aoi coordinates that are stored in a cell. these must contain x0,y0,x1,y1 coordinates for data viewer to recognize them
+%             {6}: aoi labels that are stored in a cell of the same length as {5}
+ 
+id_str=sprintf('%s_%s_%d_%s', stim, block, trial, approach) 
      
  %take screenshot, write, then send to EDF file for data viewer compatibility   
  img=Screen('GetImage', wd, [0 0 1920 1080]);
