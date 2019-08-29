@@ -5,6 +5,8 @@ function EL_shutdown()
 
 global el;
 
+%only work on shutting down eyetracker if we are eyetracking in the first place (i.e., el is not empty)
+if isempty(el), return; end
 
 % stop active recording (this should be done trialwise, but we may get here if an error is thrown and recording is ongoing)
 
