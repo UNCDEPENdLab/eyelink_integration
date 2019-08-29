@@ -1,29 +1,27 @@
 
-function end_message(block, trial, approach, el, wd);
+function end_message(outcome, trial_info);
 
-%         Eyelink('Message', sprintf('End_trial_%s_%d_%s', block, trial, approach));
-        
-        % Send an integration message so that an image can be loaded as 
-        % overlay backgound when performing Data Viewer analysis.  This 
-        % message can be placed anywhere within the scope of a trial (i.e.,
-        % after the 'TRIALID' message and before 'TRIAL_RESULT')
-        % See "Protocol for EyeLink Data to Viewer Integration -> Image 
-        % Commands" section of the EyeLink Data Viewer User Manual.
-%       Eyelink('Message', '!V IMGLOAD CENTER %s %d %d', finfo.Filename, width/2, height/2); 
-%       Eyelink('command', 'ImageTransfer', finfo.Filename)     
-%         stopkey=KbName('space');
-%  
-        
-%         
-        % STEP 7.6
+        % display information about what happened during the trial. The
+        % argument outcome will denote a task-specific string conveying
+        % info on what just happened in the preceding recording block.
+         Eyelink('Message', 'TRIAL_OUTCOME %s', outcome);
+         WaitSecs(0.1);
+       
+         if trial_info
+         Eyelink('Message', 'TRIAL OK') %valid trial
+         else
+         %something went wrong, code passed to trial_info should denote the nature of what went wrong if applicable    
+         Eyelink('Message', 'TRIAL RESULT %s', trial_info) 
+         end
+ 
         % Clear the display
         Screen('FillRect', wd, el.backgroundcolour);
      	Screen('Flip', wd);
         Eyelink('Message', 'BLANK_SCREEN');
-        % adds 100 msec of data to catch final events
+        % adds 100 msec of data to catch final measurements before closing
         WaitSecs(0.1);
-%         Eyelink('Message', 'TRIAL_RESULT 0')
-        
+
+        Eyelink('Message', 'END_RECORDING');
         % stop the recording of eye-movements for the current trial
         Eyelink('StopRecording');
 end
