@@ -1,5 +1,7 @@
 
-function end_recording_block(outcome, trial_info)
+function end_recording_block(outcome, trial_info, progress_block)
+
+        if nargin < 3, progress_block=1; end
 
         % display information about what happened during the trial. The
         % argument outcome will denote a task-specific string conveying
@@ -24,4 +26,6 @@ function end_recording_block(outcome, trial_info)
         Eyelink('Message', 'END_RECORDING');
         % stop the recording of eye-movements for the current trial
         Eyelink('StopRecording');
+        
+        if progress_block, block = block + 1; end
 end
