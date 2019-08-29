@@ -1,4 +1,4 @@
-function [el] = EL_startup(window, dummy_mode, edf_file, init_msg, calibration_type, create_file, sample_rate, run_calibration)
+function [el] = EL_startup(window, dummy_mode, edf_file, init_msg, calibration_type, sample_rate, run_calibration)
 % This function initializes a connection with the EyeLink 1000 tracker and
 % gets the PTB environment ready for recording eye position and pupil data.
 %
@@ -21,9 +21,8 @@ if nargin < 2, dummy_mode=0; end %default to real EyeLink session
 if nargin < 3, edf_file='eldemo'; end %default edf_file
 if nargin < 4, init_msg=sprintf('EL_setup executed: %s', char(datetime)); end
 if nargin < 5, calibration_type='HV9'; end %default to hv9 calibration
-if nargin < 6, create_file=true; end %open an edf file on the EyeLink computer
-if nargin < 7, sample_rate=1000; end %sampling rate for acquisition
-if nargin < 8, run_calibration=true; end %whether to run calibration step after initialization
+if nargin < 6, sample_rate=1000; end %sampling rate for acquisition
+if nargin < 7, run_calibration=true; end %whether to run calibration step after initialization
 
 default_targets = true; %no alternative at present, but this controls whether to draw calibration targets at custom positions
 
@@ -108,12 +107,9 @@ end
 % Eyelink('Command', 'link_sample_data = LEFT,RIGHT,GAZE,AREA');
 
 % open EDF file for recording data
-if create_file
-    status=Eyelink('openfile', edf_file);
-    if status~=0
-        error('openfile error, status: %d', status)
-    end
-end
+% TODO: resolve whether this bombs in dummy mode -- in which case, we might wrap it with if ~dummy_mode
+status=Eyelink('openfile', edf_file);
+if status~=0, error('openfile error, status: %d', status); end
 
 %add header file information
 %http://download.sr-support.com/dispdoc/cmds4.html
