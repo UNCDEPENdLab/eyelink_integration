@@ -76,22 +76,19 @@ el_rect_max_x = rect(RectRight);
 el_rect_min_y = rect(RectTop);
 el_rect_max_y = rect(RectBottom);
 
-% el.backgroundcolour = BlackIndex(el.window);
-% el.msgfontcolour  = WhiteIndex(el.window);
-% el.imgtitlecolour = WhiteIndex(el.window);
-% el.calibrationtargetcolour = WhiteIndex(el.window);
-el.targetbeep = 0; %don't beep for calibration targets
-
+%TODO try to make sure that we use the window's background and color scheme in the el color fields
 %suggestion from here: https://psadil.gitlab.io/psadil/post/eyetracking-init/
 % Use the PTB window to define these feature in EL
 % override default gray background of eyelink, otherwise runs end
 % up gray! also, probably best to calibrate with same colors of
 % background / stimuli as participant will encounter
-el.backgroundcolour = window.background;
-el.foregroundcolour = window.white;
-el.msgfontcolour = window.white;
-el.imgtitlecolour = window.white;
-el.calibrationtargetcolour=[window.white window.white window.white];
+el.backgroundcolour = BlackIndex(el.window);
+el.foregroundcolour = WhiteIndex(el.window);
+el.msgfontcolour  = WhiteIndex(el.window);
+el.imgtitlecolour = WhiteIndex(el.window);
+el.calibrationtargetcolour = WhiteIndex(el.window);
+
+el.targetbeep = 0; %don't beep for calibration targets
 
 % transmit update settings to EyeLink
 EyelinkUpdateDefaults(el);
