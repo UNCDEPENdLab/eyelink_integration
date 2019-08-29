@@ -35,7 +35,6 @@ if length(edf_file) > 8
     edf_file = edf_file(1:8);
 end
 
-
 % Provide Eyelink with details about the graphics environment
 % and perform some initializations. The information is returned
 % in a structure that also contains useful defaults
@@ -43,6 +42,8 @@ end
 % make necessary changes to calibration structure parameters and pass
 % it to EyelinkUpdateDefaults for changes to take affect
 el = EyelinkInitDefaults(window);
+
+%populate a few supplemental fields of the el structure for our purposes
 el.edf_file=edf_file;
 el.init_msg=init_msg;
 el.calibration_type=calibration_type;
@@ -75,24 +76,22 @@ el_rect_max_x = rect(RectRight);
 el_rect_min_y = rect(RectTop);
 el_rect_max_y = rect(RectBottom);
 
-% TODO: figure out best way for passing in window/msg settings
-el.backgroundcolour = BlackIndex(el.window);
-el.msgfontcolour  = WhiteIndex(el.window);
-el.imgtitlecolour = WhiteIndex(el.window);
+% el.backgroundcolour = BlackIndex(el.window);
+% el.msgfontcolour  = WhiteIndex(el.window);
+% el.imgtitlecolour = WhiteIndex(el.window);
+% el.calibrationtargetcolour = WhiteIndex(el.window);
 el.targetbeep = 0; %don't beep for calibration targets
-el.calibrationtargetcolour = WhiteIndex(el.window);
 
 %suggestion from here: https://psadil.gitlab.io/psadil/post/eyetracking-init/
-%this seems to use the PTB window to define these feature in EL
+% Use the PTB window to define these feature in EL
 % override default gray background of eyelink, otherwise runs end
 % up gray! also, probably best to calibrate with same colors of
 % background / stimuli as participant will encounter
-% el.backgroundcolour = window.background;
-% el.foregroundcolour = window.white;
-% el.msgfontcolour = window.white;
-% el.imgtitlecolour = window.white;
-% el.calibrationtargetcolour=[window.white window.white window.white];
-% EyelinkUpdateDefaults(el);
+el.backgroundcolour = window.background;
+el.foregroundcolour = window.white;
+el.msgfontcolour = window.white;
+el.imgtitlecolour = window.white;
+el.calibrationtargetcolour=[window.white window.white window.white];
 
 % transmit update settings to EyeLink
 EyelinkUpdateDefaults(el);
@@ -104,7 +103,7 @@ if ~EyelinkInit(dummy_mode)
 end
 
 %we could use these commands to reduce the FOV for calibration/validation if the extremes of the screen are not needed
-%Eyelink('command','calibration_area_proportion = 0.5 0.5'); 
+%Eyelink('command','calibration_area_proportion = 0.5 0.5');
 %Eyelink('command','validation_area_proportion = 0.48 0.48');
 
 % make sure that we get gaze data from the Eyelink
@@ -159,7 +158,7 @@ status = Eyelink('command', 'link_sample_data  = LEFT,RIGHT,GAZE,HREF,GAZERES,AR
 if status~=0, error('link_sample_data error, status: %d', status); end
 
 if run_calibration
-     % Calibrate the eye tracker using the standard calibration routines
+    % Calibrate the eye tracker using the standard calibration routines
     EyelinkDoTrackerSetup(el);
     
     % do a final check of calibration using driftcorrection
