@@ -30,7 +30,7 @@ try
     status = EyeLink('ReceiveFile', el.edf_file, fullfile(pwd, el.edf_file), 1);
     WaitSecs(0.2);
 
-    if status > 0, fprintf('ReceiveFile status %d\n', status); end
+    if status > 0, fprintf('ReceiveFile transferred %d bytes\n', status); end
         
     if 2==exist(el.edf_file, 'file')
         fprintf('Data file ''%s'' can be found in ''%s''\n', el.edf_file, pwd);

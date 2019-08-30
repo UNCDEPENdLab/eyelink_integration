@@ -1,4 +1,4 @@
-function [el] = EL_startup(window, dummy_mode, edf_file, init_msg, calibration_type, sample_rate, run_calibration)
+function [el] = EL_startup(window, bg_color, dummy_mode, edf_file, init_msg, calibration_type, sample_rate, run_calibration)
 % This function initializes a connection with the EyeLink 1000 tracker and
 % gets the PTB environment ready for recording eye position and pupil data.
 %
@@ -17,12 +17,16 @@ function [el] = EL_startup(window, dummy_mode, edf_file, init_msg, calibration_t
 %   https://en.wikibooks.org/wiki/MATLAB_Programming/Psychtoolbox/eyelink_toolbox
 
 if nargin < 1, window=[]; end %window from PTB OpenWindow command
-if nargin < 2, dummy_mode=0; end %default to real EyeLink session
-if nargin < 3, edf_file='eldemo'; end %default edf_file
-if nargin < 4, init_msg=sprintf('EL_setup executed: %s', char(datetime)); end
-if nargin < 5, calibration_type='HV9'; end %default to hv9 calibration
-if nargin < 6, sample_rate=1000; end %sampling rate for acquisition
-if nargin < 7, run_calibration=true; end %whether to run calibration step after initialization
+if nargin < 2, bg_color=[]; end %background color
+if nargin < 3, dummy_mode=0; end %default to real EyeLink session
+if nargin < 4, edf_file='eldemo'; end %default edf_file
+if nargin < 5, init_msg=sprintf('EL_setup executed: %s', char(datetime)); end
+if nargin < 6, calibration_type='HV9'; end %default to hv9 calibration
+if nargin < 7, sample_rate=1000; end %sampling rate for acquisition
+if nargin < 8, run_calibration=true; end %whether to run calibration step after initialization
+
+if isempty(window), error('EL_startup requires a valid window pointer'); end
+if isempty(bg_color), error('EL_startup requires a valid background color'); end
 
 default_targets = true; %no alternative at present, but this controls whether to draw calibration targets at custom positions
 
@@ -81,11 +85,18 @@ el_rect_max_y = rect(RectBottom);
 % override default gray background of eyelink, otherwise runs end
 % up gray! also, probably best to calibrate with same colors of
 % background / stimuli as participant will encounter
-el.backgroundcolour = BlackIndex(el.window);
-el.foregroundcolour = WhiteIndex(el.window);
-el.msgfontcolour  = WhiteIndex(el.window);
-el.imgtitlecolour = WhiteIndex(el.window);
-el.calibrationtargetcolour = WhiteIndex(el.window);
+
+%NB. this sets up a black-on-white screen for calibration, but changes
+%flips downstream.
+% el.backgroundcolour = BlackIndex(el.window);
+% el.foregroundcolour = WhiteIndex(el.window);
+% el.msgfontcolour  = WhiteIndex(el.window);
+% el.imgtitlecolour = WhiteIndex(el.window);
+% el.calibrationtargetcolour = WhiteIndex(el.window);
+
+%as an intelligent default, use background color of the parent window
+%during calibration, rather than EL's default.
+el.backgroundcolour = bg_color;
 
 el.targetbeep = 0; %don't beep for calibration targets
 
@@ -157,5 +168,18 @@ if run_calibration
     % do a final check of calibration using driftcorrection
     EyelinkDoDriftCorrect(el);
 end
+
+%InitDefault above sets several fields used by EL for calibration only.
+%But it uses a FillRect command to change the background during
+%calibration. Unfortunately, this changes the window forever more, even if
+%we desired a different background color and used that at OpenWindow time.
+%Thus, set the color here to the 'true' (original) background color of the
+%window and also set the el.backgroundcolour to the 'true' value in case
+%any downstream functions access this. As far as I know, none of the other
+%fields (e.g., el.foregroundcolour) are used later.
+el.backgroundcolour = bg_color;
+
+%this should reset the background color to the original
+Screen('FillRect', window, bg_color);
 
 end

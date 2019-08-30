@@ -7,7 +7,7 @@ else
 end
  
 %  sendMessage('TRIALID shroom_on', 'ins', nt, approach_str, el)
-EyeLink('Message', 'TRIALID %s', id_str)
+Eyelink('Message', 'TRIALID %s', id_str)
 
 Eyelink('command', 'record_status_message "TRIAL %s"', id_str);
 

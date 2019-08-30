@@ -30,10 +30,10 @@ function sendScreenEL(screen_export)
 
 %% create actual interest area depending on dimensions of input
 
-    dims=size(screen_export{5});
-    n_aois=dims(1); %number of AOIs we need to draw, should match length of aoi_labs
+    dims=size(screen_export{6});
+    n_aois=dims(2); %number of AOIs we need to draw, should match length of aoi_labs
 
-    status=length((screen_export{6})==n_aois;
+    status=length(screen_export{6})==n_aois;
     if screen_export{5}~=0    
     if status ~= 0 
         for aoi=1:n_aois
