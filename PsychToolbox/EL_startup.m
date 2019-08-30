@@ -1,4 +1,4 @@
-function [el] = EL_startup(window, bg_color, dummy_mode, edf_file, init_msg, calibration_type, sample_rate, run_calibration)
+function [el] = EL_startup(window, bg_color, dummy_mode, edf_file, init_msg, calibration_type, sample_rate, run_calibration, use_ellipse)
 % This function initializes a connection with the EyeLink 1000 tracker and
 % gets the PTB environment ready for recording eye position and pupil data.
 %
@@ -24,6 +24,7 @@ if nargin < 5, init_msg=sprintf('EL_setup executed: %s', char(datetime)); end
 if nargin < 6, calibration_type='HV9'; end %default to hv9 calibration
 if nargin < 7, sample_rate=1000; end %sampling rate for acquisition
 if nargin < 8, run_calibration=true; end %whether to run calibration step after initialization
+if nargin < 9, use_ellipse=false; end %default to centroid
 
 if isempty(window), error('EL_startup requires a valid window pointer'); end
 if isempty(bg_color), error('EL_startup requires a valid background color'); end
@@ -160,6 +161,23 @@ if status~=0, error('file_sample_data error, status: %d',status); end
 
 status = Eyelink('command', 'link_sample_data  = LEFT,RIGHT,GAZE,HREF,GAZERES,AREA,HTARGET,STATUS,INPUT');
 if status~=0, error('link_sample_data error, status: %d', status); end
+
+% set pupil Tracking model in camera setup screen
+% no = centroid (DEFAULT)
+% yes = ellipse
+
+% guidance from here: If the subject has droopy eyelids or some other physical characteristic
+% is blocking the camera's view of part of the pupil you can consider changing the Pupil Tracking
+% mode from Centroid to Ellipse. Ellipse is noisier than Centroid in general, but it is more robust
+% in the face of partial pupil occlusion (i.e., it will be less likely to result in tracking loss
+% when the subject's pupil is being partially blocked by things like eyelids). You can do so via
+% the buttons on the left side of the Host PC monitor when in Camera Setup mode.
+
+if use_ellipse
+    Eyelink('command', 'use_ellipse_fitter = yes');
+else
+    Eyelink('command', 'use_ellipse_fitter = no');
+end
 
 if run_calibration
     % Calibrate the eye tracker using the standard calibration routines
