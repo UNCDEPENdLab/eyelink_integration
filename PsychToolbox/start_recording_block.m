@@ -24,10 +24,14 @@ if ~isnumeric(block), error('in start_recording_block, block must be a number');
 if isnumeric(super),  super=num2str(super); end   % to ensure that sprintf gives the right result for numeric super
 if isnumeric(stim),   stim=num2str(stim);   end   % to ensure that sprintf gives the right result for numeric stim
 
+super = strrep(super, '_', '-'); %replace any underscores with hyphens in the super so that it doesn't break split on underscore convention
+stim  = strrep(stim,  '_', '-'); %replace any underscores with hyphens in the stimulus so that it doesn't break split on underscore convention
+
 if nargin < 5 || isempty(custom)
     id_str=sprintf('%s_%d_%d_%s', super, trial, block, stim);
 else
     if isnumeric(custom), custom=num2str(custom); end % to ensure that sprintf gives the right result for numeric custom
+    custom = strrep(custom,  '_', '-'); %replace any underscores with hyphens in the custom so that it doesn't break underscore convention
     id_str=sprintf('%s_%d_%d_%s_%s', super, trial, block, stim, custom);
 end
 

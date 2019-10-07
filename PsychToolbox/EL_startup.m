@@ -43,8 +43,8 @@ end
 % and perform some initializations. The information is returned
 % in a structure that also contains useful defaults
 % and control codes (e.g. tracker state bit and Eyelink key values).
-% make necessary changes to calibration structure parameters and pass
-% it to EyelinkUpdateDefaults for changes to take affect
+% Make necessary changes to calibration structure parameters and pass
+% it to EyelinkUpdateDefaults for changes to take effect
 el = EyelinkInitDefaults(window);
 
 %populate a few supplemental fields of the el structure for our purposes
@@ -61,14 +61,6 @@ el.calibration_type=calibration_type;
 % see also
 % Psychtoolbox/PsychHardware/EyelinkToolbox/EyelinkDemos/Short demos/EyelinkExample.m
 % which calls some functions that do not work on the windows openGL ptb
-
-%TODO cleanup unused flags here
-%doDisplay=1; %use ptb
-%mouseInsteadOfGaze=0; %control gaze cursor using mouse instead of gaze (for testing, in case calibration isn't worked out yet)
-
-% STEP 1
-% Initialization of the connection with the Eyelink Gazetracker.
-% Exit program if this fails.
 
 %add edf suffix back to file
 edf_file = [edf_file,'.edf'];
