@@ -1,5 +1,4 @@
-
-function end_recording_block(outcome, trial_info, wd, el, progress_block)
+function end_recording_block(outcome, trial_info, wd, el, clear_display, progress_block)
 % Finalizes a recording block and conveys task-relevant information about
 % what happened during the recording block of interest.
 %
@@ -8,17 +7,19 @@ function end_recording_block(outcome, trial_info, wd, el, progress_block)
 %   - outcome: task-specific code that denotes what happened during the
 %   trial (e.g. 0_1 could denote that an incorrect stimulus was chosen (0) yet )
 
-
-if nargin < 5, progress_block=1; end
+if nargin < 5, clear_display=true; end
+if nargin < 6, progress_block=1; end
 
 %read in global variables
 global block;
-%         global el;
-%         global wd;
+
 %update: 8/30: though it is a bit clunky, seems more flexible to
 %include these as arguments rather than global variables, this
-%allows the user to name the PTB window and the eye;link variable
+%allows the user to name the PTB window and the Eyelink variable
 %whatever works best for them.
+
+% global el;
+% global wd;
 
 % display information about what happened during the trial. The
 % argument outcome will denote a task-specific string conveying
@@ -34,11 +35,14 @@ else
 end
 
 % Clear the display
-Screen('FillRect', wd, el.backgroundcolour);
-Screen('Flip', wd);
-Eyelink('Message', 'BLANK_SCREEN');
-% adds 100 msec of data to catch final measurements before closing
-WaitSecs(0.1);
+if clear_display
+    Screen('FillRect', wd, el.backgroundcolour);
+    Screen('Flip', wd);
+    
+    Eyelink('Message', 'BLANK_SCREEN');
+    % adds 100 msec of data to catch final measurements before closing
+    WaitSecs(0.1);
+end
 
 Eyelink('Message', 'END_RECORDING');
 

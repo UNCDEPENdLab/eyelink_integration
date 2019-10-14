@@ -10,15 +10,15 @@ if isempty(el), return; end
 
 % stop active recording (this should be done trialwise, but we may get here if an error is thrown and recording is ongoing)
 
-EyeLink('StopRecording');
+Eyelink('StopRecording');
 WaitSecs(0.2); % Slack to let stop definitely happen
 
 %set to idle mode and wait for mode switch to take effect
 %alternative that I think does the same thing: Eyelink('Command', 'set_idle_mode');
-EyeLink('SetOfflineMode'); 
+Eyelink('SetOfflineMode'); 
 WaitSecs(0.2);
 
-EyeLink('CloseFile');
+Eyelink('CloseFile');
 WaitSecs(0.2);
 
 % TODO: Make sure that we can't overwrite and existing file!
@@ -27,7 +27,7 @@ try
     fprintf('Receiving data file ''%s''\n', el.edf_file);
     
     %put the edf in the current working directory
-    status = EyeLink('ReceiveFile', el.edf_file, fullfile(pwd, el.edf_file), 1);
+    status = Eyelink('ReceiveFile', el.edf_file, fullfile(pwd, el.edf_file), 1);
     WaitSecs(0.2);
 
     if status > 0, fprintf('ReceiveFile transferred %d bytes\n', status); end

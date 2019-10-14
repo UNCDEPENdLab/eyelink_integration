@@ -7,7 +7,7 @@ function [id_str] = start_recording_block(super, trial, block, stim, custom)
 %             block versus high load block). More generally, this field denote trials grouping at the highest 
 %             level such as instrumental, pavlovian, and pit in a three-phase PIT paradigm.
 %   - trial:  this number denotes the repetition of the super (condition) currently being run.
-%   - block:  this is a number enumerating the sub-part of the trial. The use of 'block' in EyeLink conventions
+%   - block:  this is a number enumerating the sub-part of the trial. The use of 'block' in Eyelink conventions
 %             is a bit peculiar, but it basically refers to sub-parts of a given trial that should be marked 
 %             separately. For example, in a single trial, we might have cue (1), anticipation (2), and outcome (3)
 %             blocks that should be marked individually in the EDF file.
@@ -36,15 +36,19 @@ else
 end
 
 %add the trial ID to the EDF file for later parsing
-EyeLink('Message', 'TRIALID %s', id_str);
+Eyelink('Message', 'TRIALID %s', id_str);
 
-%send the trial info to the tracker for display on the Host PC (in EyeLink window)
+%send the trial info to the tracker for display on the Host PC (in Eyelink window)
 %this helps the RA monitor experiment progress
 Eyelink('command', 'record_status_message "TRIAL %s"', id_str);
 
 % http://download.sr-support.com/dispdoc/simple_template.html
-% Must be offline/idle mode to draw to EyeLink screen
+% Must be offline/idle mode to draw to Eyelink screen
 Eyelink('command', 'set_idle_mode');
+
+% current SR recommendation is to wait briefly after mode switch before StartRecording
+% https://www.sr-support.com/forum/eyelink/programming/52412-issues-about-startrecording-and-stoprecording
+WaitSecs(0.05);
 
 % clear host PC screen to black (0)
 Eyelink('command', 'clear_screen 0');

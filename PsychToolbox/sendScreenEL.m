@@ -16,7 +16,8 @@ function sendScreenEL(screen_export)
 
 
 %take screenshot, write, then send to EDF file for data viewer compatibility
-img=Screen('GetImage', screen_export{1}, [0 0 screen_export{3} screen_export{4}]);
+%omit rect argument to grab entire window. Otherwise, we only get a partial screen on Retina/high DPI displays
+img=Screen('GetImage', screen_export{1}); %, [0 0 screen_export{3} screen_export{4}]);
 
 imwrite(img, sprintf('screenshots/on_%s.jpeg', screen_export{2}));
 finfo = imfinfo(sprintf('screenshots/on_%s.jpeg', screen_export{2}));
@@ -31,17 +32,18 @@ Eyelink('command', 'ImageTransfer', finfo.Filename)
 if length(screen_export) < 5, return; end
 
 %% create interest area depending on dimensions of input
-n_aois=size(screen_export{5}, 1); %number of AOIs we need to draw, should match length of aoi_labs
+aoi_rects = screen_export{5};
+aoi_labs = screen_export{6};
 
-status = (length(screen_export{6})==n_aois);
-
-if status ~= 0
-    for aoi=1:n_aois
-        these_dims = screen_export{5}(aoi,:);
-        Eyelink('Message', '!V IAREA RECTANGLE %d %d %d %d %d %s', aoi, these_dims(1), these_dims(2), these_dims(3), these_dims(4), screen_export{6}{aoi});
-    end
-else
+n_aois=size(aoi_rects, 1); %number of AOIs we need to draw, should match length of aoi_labs
+if n_aois ~= length(aoi_labs)
     error('aois df length does not match labels!')
+end
+
+for aoi=1:n_aois
+    these_dims = aoi_rects(aoi,:);
+    %fprintf('!V IAREA RECTANGLE %d %d %d %d %d %s\n', aoi, these_dims(1), these_dims(2), these_dims(3), these_dims(4), aoi_labs{aoi});
+    Eyelink('Message', '!V IAREA RECTANGLE %d %d %d %d %d %s', aoi, these_dims(1), these_dims(2), these_dims(3), these_dims(4), aoi_labs{aoi});
 end
 
 

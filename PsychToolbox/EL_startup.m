@@ -1,5 +1,5 @@
 function [el] = EL_startup(window, bg_color, dummy_mode, edf_file, init_msg, calibration_type, sample_rate, run_calibration, use_ellipse)
-% This function initializes a connection with the EyeLink 1000 tracker and
+% This function initializes a connection with the Eyelink 1000 tracker and
 % gets the PTB environment ready for recording eye position and pupil data.
 %
 % inputs:
@@ -18,7 +18,7 @@ function [el] = EL_startup(window, bg_color, dummy_mode, edf_file, init_msg, cal
 
 if nargin < 1, window=[]; end %window from PTB OpenWindow command
 if nargin < 2, bg_color=[]; end %background color
-if nargin < 3, dummy_mode=0; end %default to real EyeLink session
+if nargin < 3, dummy_mode=0; end %default to real Eyelink session
 if nargin < 4, edf_file='eldemo'; end %default edf_file
 if nargin < 5, init_msg=sprintf('EL_setup executed: %s', char(datetime)); end
 if nargin < 6, calibration_type='HV9'; end %default to hv9 calibration
@@ -93,7 +93,7 @@ el.backgroundcolour = bg_color;
 
 el.targetbeep = 0; %don't beep for calibration targets
 
-% transmit update settings to EyeLink
+% transmit update settings to Eyelink
 EyelinkUpdateDefaults(el);
 
 % Initialization of the connection with the Eyelink
@@ -119,7 +119,7 @@ if status~=0, error('openfile error, status: %d', status); end
 %http://download.sr-support.com/dispdoc/cmds4.html
 Eyelink('command', ['add_file_preamble_text ''', init_msg, '''']);
 
-%EyeLink Tracker Configuration: http://download.sr-support.com/dispdoc/simple_template.html
+%Eyelink Tracker Configuration: http://download.sr-support.com/dispdoc/simple_template.html
 %Set display resolution. Subtract 1 from max x and max y since we have zero-based screen coordinated
 Eyelink('command','screen_pixel_coords = %ld %ld %ld %ld', el_rect_min_x, el_rect_min_y, el_rect_max_x-1, el_rect_max_y-1);
 
@@ -128,7 +128,11 @@ Eyelink('message', 'DISPLAY_COORDS %ld %ld %ld %ld', el_rect_min_x, el_rect_min_
 
 %%check connection to eyelink
 status=Eyelink('IsConnected');
-if status ~= 1, error('could not init connection to Eyelink'); end
+if status ~= 1 && ~dummy_mode
+    error('could not init connection to Eyelink')
+elseif dummy_mode && status ~= -1
+    error('dummy mode connection to Eyelink failed')
+end
 
 %set calibration type
 Eyelink('command', ['calibration_type = ', calibration_type]);
