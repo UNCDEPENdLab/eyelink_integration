@@ -1,4 +1,4 @@
-function EL_shutdown()
+function el_shutdown()
 % close data file and shut down tracker
 % inspired by: EyelinkPictureCustomCalibration.m
 % inspired by: https://psadil.gitlab.io/psadil/post/eyetracking-in-psychtoolbox-oop/

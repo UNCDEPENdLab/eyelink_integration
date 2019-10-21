@@ -33,11 +33,19 @@ if length(screen_export) < 5, return; end
 
 %% create interest area depending on dimensions of input
 aoi_rects = screen_export{5};
+
+%if aoi_rects is a cell vector (one rect per cell), convert to AOIs x 4 matrix
+if iscell(aoi_rects), aoi_rects = vertcat(aoi_rects{:}); end
+
 aoi_labs = screen_export{6};
 
 n_aois=size(aoi_rects, 1); %number of AOIs we need to draw, should match length of aoi_labs
 if n_aois ~= length(aoi_labs)
-    error('aois df length does not match labels!')
+    error('aoi_rects length does not match labels!')
+end
+
+if size(aoi_rects, 2) ~= 4
+    error('aoi_rects matrix does not have four columns -- invalid rectangle specification?');
 end
 
 for aoi=1:n_aois

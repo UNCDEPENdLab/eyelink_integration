@@ -1,4 +1,4 @@
-function [el] = EL_startup(window, bg_color, dummy_mode, edf_file, init_msg, calibration_type, sample_rate, run_calibration, use_ellipse)
+function [el] = el_startup(window, bg_color, dummy_mode, edf_file, init_msg, calibration_type, sample_rate, run_calibration, use_ellipse)
 % This function initializes a connection with the Eyelink 1000 tracker and
 % gets the PTB environment ready for recording eye position and pupil data.
 %
