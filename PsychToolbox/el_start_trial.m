@@ -1,4 +1,4 @@
-function [id_str] = el_start_trial(super, trial, block, stim, custom, start_recording, trial_var)
+function [id_str] = el_start_trial(super, trial, block, stim, custom, start_recording, messages, trial_var)
 % This recording TRIALID scheme follows the Lab Eyelink Message Conventions document
 %
 % inputs:
@@ -24,13 +24,13 @@ function [id_str] = el_start_trial(super, trial, block, stim, custom, start_reco
 %      el_start_trial('insphase', 1, 2, 'cueon', 'custominfohere', true); %begin trial and start eye recording
 %
 %   Example with trial_var messages:
-%      el_start_trial('insphase', 1, 2, 'cueon', 'custominfohere', true, {'msg1', 'cue_display'});
+%      el_start_trial('insphase', 1, 2, 'cueon', 'custominfohere', true, [], {'trialvar_msg1', 'cue_display'});
 % 
-%   Example in which we assume eye recording is handled upstream, and with trial_var messages:
-%      el_start_trial('pitphase', 1, 2, 'feedback', 'custominfohere', false, {'msg2', 'feedback_display'});
+%   Example in which we assume eye recording is handled upstream, and with messages and trial_var messages:
+%      el_start_trial('pitphase', 1, 2, 'feedback', 'custominfohere', false, {'message 1 is here'}, {'trial_varmsg2', 'feedback_display'});
 
 
-if nargin < 6, start_recording = false; end % default to not passing the StartRecording command
+if nargin < 6, start_recording = true; end % default to passing the StartRecording command
 
 if ~isnumeric(trial), error('in start_recording_block, trial must be a number'); end
 if ~isnumeric(block), error('in start_recording_block, block must be a number'); end
@@ -55,6 +55,8 @@ Eyelink('Message', 'TRIALID %s', id_str);
 %send the trial info to the tracker for display on the Host PC (in Eyelink window)
 %this helps the RA monitor experiment progress
 Eyelink('command', 'record_status_message "TRIAL %s"', id_str);
+
+el_send_messages(messages); %pass supplementary messages
 
 % Whether we start recording of eye data, or leave this to a superordinate function.
 % Using start_recording is useful here if we plan to start and stop on every trial, which
@@ -102,10 +104,10 @@ if ~isempty(trial_var)
     nremaining = nmessages;
     i = 1;
     while nremaining > 0
-        %add 1ms delay after every 5 messages to avoid overload
+        %add 5ms delay after every 5 messages to avoid messaging overload
         if i > 1 && mod(i-1, 10) == 0 && nremaining > 1
-            WaitSecs(0.001); 
-            %fprintf('WaitSecs(0.001)\n'); 
+            WaitSecs(0.005); 
+            %fprintf('WaitSecs(0.005)\n'); 
         end
         
         message_name = trial_var{i};
