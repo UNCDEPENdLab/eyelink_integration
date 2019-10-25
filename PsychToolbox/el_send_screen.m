@@ -25,8 +25,8 @@ if nargin < 2, send_to_host = false; end %whether to send the stimulus image to 
 %omit rect argument to grab entire window. Otherwise, we only get a partial screen on Retina/high DPI displays
 img=Screen('GetImage', screen_export{1}); %, [0 0 screen_export{3} screen_export{4}]);
 
-imwrite(img, sprintf('screenshots/on_%s.jpeg', screen_export{2}));
-finfo = imfinfo(sprintf('screenshots/on_%s.jpeg', screen_export{2}));
+imwrite(img, sprintf('screenshots/%s.jpg', screen_export{2}));
+finfo = imfinfo(sprintf('screenshots/%s.jpg', screen_export{2}));
 
 %Sends image file location to Data Viewer
 Eyelink('Message', '!V IMGLOAD CENTER %s %d %d', finfo.Filename, screen_export{3}/2, screen_export{4}/2);

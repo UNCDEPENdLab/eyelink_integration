@@ -31,9 +31,11 @@ function [id_str] = el_start_trial(super, trial, block, stim, custom, start_reco
 
 
 if nargin < 6, start_recording = true; end % default to passing the StartRecording command
+if nargin < 7, messages=[]; end
+if nargin < 8, trial_var=[]; end
 
-if ~isnumeric(trial), error('in start_recording_block, trial must be a number'); end
-if ~isnumeric(block), error('in start_recording_block, block must be a number'); end
+if ~isnumeric(trial), error('in el_start_trial, trial must be a number'); end
+if ~isnumeric(block), error('in el_start_trial, block must be a number'); end
 
 if isnumeric(super),  super=num2str(super); end   % to ensure that sprintf gives the right result for numeric super
 if isnumeric(stim),   stim=num2str(stim);   end   % to ensure that sprintf gives the right result for numeric stim
