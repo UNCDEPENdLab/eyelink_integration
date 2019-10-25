@@ -8,10 +8,21 @@ global el;
 %only work on shutting down eyetracker if we are eyetracking in the first place (i.e., el is not empty)
 if isempty(el), return; end
 
-% stop active recording (this should be done trialwise, but we may get here if an error is thrown and recording is ongoing)
+%Only stop recording and try to receive file if we are connected
+connection_status = Eyelink('IsConnected');
+if connection_status <= 0
+    fprintf('Eyelink is not connected (disconnected or dummy mode).\n');
+    Eyelink('Shutdown');
+    return;
+end
 
-Eyelink('StopRecording');
-WaitSecs(0.2); % Slack to let stop definitely happen
+% stop active recording (this should be done trialwise, but we may get here if an error is thrown and recording is ongoing)
+% only try to stop recording if recording is in progress (status 0)
+recording_status = Eyelink('CheckRecording');
+if recording_status == 0
+    Eyelink('StopRecording');
+    WaitSecs(0.2); % Slack to let stop definitely happen
+end
 
 %set to idle mode and wait for mode switch to take effect
 %alternative that I think does the same thing: Eyelink('Command', 'set_idle_mode');

@@ -111,7 +111,6 @@ end
 % Eyelink('Command', 'link_sample_data = LEFT,RIGHT,GAZE,AREA');
 
 % open EDF file for recording data
-% TODO: resolve whether this bombs in dummy mode -- in which case, we might wrap it with if ~dummy_mode
 status=Eyelink('openfile', edf_file);
 if status~=0, error('openfile error, status: %d', status); end
 
