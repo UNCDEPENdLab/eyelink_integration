@@ -32,7 +32,7 @@ WaitSecs(0.2);
 Eyelink('CloseFile');
 WaitSecs(0.2);
 
-% TODO: Make sure that we can't overwrite and existing file!
+% TODO: Make sure that we can't overwrite an existing file!
 try
     %receive file from eye tracker    
     fprintf('Receiving data file ''%s''\n', el.edf_file);
@@ -46,7 +46,7 @@ try
     if 2==exist(el.edf_file, 'file')
         fprintf('Data file ''%s'' can be found in ''%s''\n', el.edf_file, pwd);
     end
-catch %#ok<*CTCH>
+catch
     fprintf('Problem receiving data file ''%s''\n', el.edf_file);
 end
 

@@ -70,7 +70,7 @@ if start_recording
     
     % http://download.sr-support.com/dispdoc/simple_template.html
     % Must be offline/idle mode to draw to Eyelink screen
-    Eyelink('command', 'set_idle_mode');
+    Eyelink('Command', 'set_idle_mode');
     
     % current SR recommendation is to wait briefly after mode switch before StartRecording
     % https://www.sr-support.com/forum/eyelink/programming/52412-issues-about-startrecording-and-stoprecording
