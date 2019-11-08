@@ -58,8 +58,6 @@ Eyelink('Message', 'TRIALID %s', id_str);
 %this helps the RA monitor experiment progress
 Eyelink('command', 'record_status_message "TRIAL %s"', id_str);
 
-el_send_messages(messages); %pass supplementary messages
-
 % Whether we start recording of eye data, or leave this to a superordinate function.
 % Using start_recording is useful here if we plan to start and stop on every trial, which
 % allows drift corrects to be added after each trial. On the other hand, if we need to 
@@ -86,6 +84,9 @@ if start_recording
     WaitSecs(0.1); %wait 100ms after we start recording so we don't lose samples
     
 end
+
+% Pass any supplementary messages. These should come after recording starts for data viewer to see them consistently
+el_send_messages(messages);
 
 % mark zero-plot time in data file
 % TODO: unify use of this call with DISPLAY ON

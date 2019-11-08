@@ -38,7 +38,7 @@ try
     fprintf('Receiving data file ''%s''\n', el.edf_file);
     
     %put the edf in the current working directory
-    status = Eyelink('ReceiveFile', el.edf_file, fullfile(pwd, el.edf_file), 1);
+    status = Eyelink('ReceiveFile', el.edf_file, fullfile(pwd, 'eye_data'), 1);
     WaitSecs(0.2);
 
     if status > 0, fprintf('ReceiveFile transferred %d bytes\n', status); end

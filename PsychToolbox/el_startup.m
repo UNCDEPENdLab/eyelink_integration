@@ -47,6 +47,9 @@ end
 % it to EyelinkUpdateDefaults for changes to take effect
 el = EyelinkInitDefaults(window);
 
+%add edf suffix back to file
+edf_file = [edf_file,'.edf'];
+
 %populate a few supplemental fields of the el structure for our purposes
 el.edf_file=edf_file;
 el.init_msg=init_msg;
@@ -61,9 +64,6 @@ el.calibration_type=calibration_type;
 % see also
 % Psychtoolbox/PsychHardware/EyelinkToolbox/EyelinkDemos/Short demos/EyelinkExample.m
 % which calls some functions that do not work on the windows openGL ptb
-
-%add edf suffix back to file
-edf_file = [edf_file,'.edf'];
 
 rect=Screen('Rect', window);
 

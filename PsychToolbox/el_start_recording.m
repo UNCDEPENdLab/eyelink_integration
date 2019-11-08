@@ -14,8 +14,6 @@ function el_start_recording(messages)
 %      el_start_recording({'PIT BLOCK START', 'SUBJECT ID 12'});
 %
 
-el_send_messages(messages); %pass any supplementary messages
-
 % http://download.sr-support.com/dispdoc/simple_template.html
 % Must be offline/idle mode to draw to Eyelink screen
 Eyelink('command', 'set_idle_mode');
@@ -32,5 +30,8 @@ status=Eyelink('StartRecording');
 if status ~= 0, error('startrecording error, status: %d', status); end
 
 WaitSecs(0.1); %wait 100ms after we start recording so we don't lose samples
+
+% Pass any supplementary messages. These should come after recording starts for data viewer to see them consistently
+el_send_messages(messages); 
 
 end
