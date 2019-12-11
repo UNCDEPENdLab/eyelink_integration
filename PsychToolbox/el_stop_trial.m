@@ -23,6 +23,8 @@ if nargin < 8, progress_block = true; end %not sure what this does
 %read in global variables
 global block;
 
+if isempty(el), return; end %don't even run this function if we have no el structure setup
+
 el_send_messages(messages); %pass any supplementary messages
 
 % display information about what happened during the trial. The
