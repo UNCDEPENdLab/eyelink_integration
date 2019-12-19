@@ -51,9 +51,6 @@ else
     id_str=sprintf('%s_%d_%d_%s_%s', super, trial, block, stim, custom);
 end
 
-%add the trial ID to the EDF file for later parsing
-Eyelink('Message', 'TRIALID %s', id_str);
-
 %send the trial info to the tracker for display on the Host PC (in Eyelink window)
 %this helps the RA monitor experiment progress
 Eyelink('command', 'record_status_message "TRIAL %s"', id_str);
@@ -84,6 +81,10 @@ if start_recording
     WaitSecs(0.1); %wait 100ms after we start recording so we don't lose samples
     
 end
+
+%NB. Passing messages should occur after StartRecording has run for them to be consistently recorded in the EDF.
+%add the trial ID to the EDF file for later parsing
+Eyelink('Message', 'TRIALID %s', id_str);
 
 % Pass any supplementary messages. These should come after recording starts for data viewer to see them consistently
 el_send_messages(messages);
