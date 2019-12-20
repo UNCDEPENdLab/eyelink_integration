@@ -32,10 +32,16 @@ WaitSecs(0.2);
 Eyelink('CloseFile');
 WaitSecs(0.2);
 
-% TODO: Make sure that we can't overwrite an existing file!
 try
     %receive file from eye tracker    
     fprintf('Receiving data file ''%s''\n', el.edf_file);
+    
+    fulledf = fullfile(pwd, 'eye_data', el.edf_file);
+    if exist(fulledf, 'file') == 2
+        fprintf('Eye data file already exists: ''%s''\n.  Moving to a backup file!\n', fulledf);
+        %move the existing edf file out of the way before transferring eye data
+        movefile(fulledf, strrep(fulledf, '.edf', ['_', datestr(now, 'ddmmmyyyy_HHMMSS'), '.edf']));
+    end
     
     %put the edf in the current working directory
     status = Eyelink('ReceiveFile', el.edf_file, fullfile(pwd, 'eye_data'), 1);
@@ -43,7 +49,7 @@ try
 
     if status > 0, fprintf('ReceiveFile transferred %d bytes\n', status); end
         
-    if 2==exist(el.edf_file, 'file')
+    if exist(el.edf_file, 'file') == 2
         fprintf('Data file ''%s'' can be found in ''%s''\n', el.edf_file, pwd);
     end
 catch
